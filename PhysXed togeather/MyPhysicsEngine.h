@@ -215,9 +215,6 @@ namespace PhysicsEngine
 		MySimulationEventCallback* my_callback;
 		
 		//my objects
-		Wall1x1x1* wall;
-		Wall3x1x1* wall2;
-
 		CylinderStatic* StaticCyl;
 		Cylinder* cyl;
 
@@ -268,38 +265,77 @@ namespace PhysicsEngine
 			cerr << "I am pressed!" << endl;
 		}
 
+		//static object vars
+			Wall3x1x1* wall1, wall1lvl2;
+			Wall3x2x1* wall2, wall2lvl2;
+			Wall2x1x1* wall3, wall3lvl2;
+
 		// create static objects in the world
 		virtual void CustomLevel1()
 		{
+			
+
 			plane = new Plane();
 			plane->Color(PxVec3(210.f / 255.f, 210.f / 255.f, 210.f / 255.f));
 			Add(plane);
 
-			wall2 = new Wall3x1x1(PxTransform(PxVec3(.0f, .5f, .0f)));
+			wall1 = new Wall3x1x1(PxTransform(PxVec3(-2.f, .5f, .0f)));
+			wall1->Color(PxVec3(1.f / 255.f, 1.f / 255.f, 1.f / 255.f));
+			Add(wall1);
+
+			wall2 = new Wall3x2x1(PxTransform(PxVec3(1.f, 1.f, .0f)));
 			wall2->Color(PxVec3(1.f / 255.f, 1.f / 255.f, 1.f / 255.f));
 			Add(wall2);
 
-			StaticCyl = new CylinderStatic(PxTransform(PxVec3(2.f, .5f, .0f)));
+			wall3 = new Wall2x1x1(PxTransform(PxVec3(3.5f, .5f, .0f)));
+			wall3->Color(PxVec3(1.f / 255.f, 1.f / 255.f, 1.f / 255.f));
+			Add(wall3);
+
+
+			/*StaticCyl = new CylinderStatic(PxTransform(PxVec3(2.f, .5f, .0f)));
 			StaticCyl->Color(color_palette[5]);
-			Add(StaticCyl);
+			Add(StaticCyl);*/
 		}
 
+		//virtual void CustomLevel2()
+		//{
+		//	plane = new Plane();
+		//	plane->Color(PxVec3(210.f / 255.f, 210.f / 255.f, 210.f / 255.f));
+		//	Add(plane);
+
+		//	wall1lvl2 = new Wall3x1x1(PxTransform(PxVec3(-3.f, .5f, 0.f)));
+		//	wall1lvl2->Colour(1.f / 255.f, 1.f / 255.f, 1.f / 255.f);
+		//	Add(wall1lvl2);
+
+		//	/*StaticCyl = new CylinderStatic(PxTransform(PxVec3(2.f, .5f, .0f)));
+		//	StaticCyl->Color(color_palette[5]);
+		//	Add(StaticCyl);*/
+		//}
+
 		virtual void CustomActors()
-		{
-			box = new Box(PxTransform(PxVec3(.0f, 3.f, .0f)));
-			box->Color(color_palette[2]);
+		{	
 			////set collision filter flags
 			////box->SetupFiltering(FilterGroup::ACTOR0, FilterGroup::ACTOR1);
 			////use | operator to combine more actors e.g.
 			////box->SetupFiltering(FilterGroup::ACTOR0, FilterGroup::ACTOR1 | FilterGroup::ACTOR2);
 			////don't forget to set your flags for the matching actor as well, e.g.:
 			////box2->SetupFiltering(FilterGroup::ACTOR1, FilterGroup::ACTOR0);
-			box->Name("Box1");
+
+			box = new Box(PxTransform(PxVec3(-3.f, 3.f, .0f)));
+			box->Color(color_palette[2]);
+			box->Name("player1");
+			box->SetupFiltering(FilterGroup::ACTOR0, FilterGroup::ACTOR1);
 			Add(box);
 
-			cyl = new Cylinder(PxTransform(PxVec3(2.0f, 1.5f, .0f)));
+			box2 = new Box(PxTransform(PxVec3(4.f, 3.f, .0f)));
+			box2->Color(color_palette[3]);
+			box2->Name("palyer1.5");
+			box->SetupFiltering(FilterGroup::ACTOR1, FilterGroup::ACTOR0);
+			Add(box2);
+			
+			/*cyl = new Cylinder(PxTransform(PxVec3(2.0f, 1.5f, .0f)));
 			cyl->Color(color_palette[11]);
-			Add(cyl);
+			Add(cyl);*/
 		}
 
 		virtual void CustomJoints()

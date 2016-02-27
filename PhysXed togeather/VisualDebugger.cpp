@@ -102,13 +102,14 @@ namespace VisualDebugger
 		hud.AddLine(HELP, "    F6 - shadows on/off");
 		hud.AddLine(HELP, "    F7 - render mode");
 		hud.AddLine(HELP, "");
-		hud.AddLine(HELP, " Camera");
-		hud.AddLine(HELP, "    W,S,A,D,Q,Z - forward,backward,left,right,up,down");
+		hud.AddLine(HELP, " Player Force (applied to the selected actors)");
+		hud.AddLine(HELP, "    W,S,A,D, - up,down,left,right");
 		hud.AddLine(HELP, "    mouse + click - change orientation");
 		hud.AddLine(HELP, "    F8 - reset view");
 		hud.AddLine(HELP, "");
-		hud.AddLine(HELP, " Force (applied to the selected actor)");
-		hud.AddLine(HELP, "    I,K,J,L,U,M - forward,backward,left,right,up,down");
+		//hud.AddLine(HELP, " camera");
+		//hud.AddLine(HELP, "    I,K,J,L,U,M - forward,backward,left,right,up,down");
+		
 		//add a pause screen
 		hud.AddLine(PAUSE, "");
 		hud.AddLine(PAUSE, "");
