@@ -16,10 +16,30 @@ namespace PhysicsEngine
 		}
 	};
 
+	class Wall2x1x1 : public StaticActor
+	{
+	public:
+		Wall2x1x1(const PxTransform& pose = PxTransform(PxIdentity), PxVec3 dimensions = PxVec3(1.f, .5f, .5f), PxReal density = 1.f)
+			: StaticActor(pose)
+		{
+			CreateShape(PxBoxGeometry(dimensions), density);
+		}
+	};
+
 	class Wall3x1x1 : public StaticActor
 	{
 	public:
 		Wall3x1x1(const PxTransform& pose = PxTransform(PxIdentity), PxVec3 dimensions = PxVec3(1.5f, .5f, .5f), PxReal density = 1.f)
+			: StaticActor(pose)
+		{
+			CreateShape(PxBoxGeometry(dimensions), density);
+		}
+	};
+
+	class Wall3x2x1 : public StaticActor
+	{
+	public:
+		Wall3x2x1(const PxTransform& pose = PxTransform(PxIdentity), PxVec3 dimensions = PxVec3(1.5f, 1.f, .5f), PxReal density = 1.f)
 			: StaticActor(pose)
 		{
 			CreateShape(PxBoxGeometry(dimensions), density);

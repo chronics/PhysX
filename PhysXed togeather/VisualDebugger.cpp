@@ -204,22 +204,22 @@ namespace VisualDebugger
 	{
 		switch (toupper(key))
 		{
-		case 'W':
+		case 'I':
 			camera->MoveForward(delta_time);
 			break;
-		case 'S':
+		case 'K':
 			camera->MoveBackward(delta_time);
 			break;
-		case 'A':
+		case 'J':
 			camera->MoveLeft(delta_time);
 			break;
-		case 'D':
+		case 'L':
 			camera->MoveRight(delta_time);
 			break;
-		case 'Q':
+		case 'U':
 			camera->MoveUp(delta_time);
 			break;
-		case 'Z':
+		case 'O':
 			camera->MoveDown(delta_time);
 			break;
 		default:
@@ -235,24 +235,17 @@ namespace VisualDebugger
 
 		switch (toupper(key))
 		{
-			// Force controls on the selected actor
-		case 'I': //forward
-			scene->GetSelectedActor()->addForce(PxVec3(0,0,-1)*gForceStrength);
+		case 'W':
+			scene->GetSelectedActor()->addForce(PxVec3(0, 1, 0)*gForceStrength);
 			break;
-		case 'K': //backward
-			scene->GetSelectedActor()->addForce(PxVec3(0,0,1)*gForceStrength);
+		case 'S':
+			scene->GetSelectedActor()->addForce(PxVec3(0, -1, 0)*gForceStrength);
 			break;
-		case 'J': //left
-			scene->GetSelectedActor()->addForce(PxVec3(-1,0,0)*gForceStrength);
+		case 'A':
+			scene->GetSelectedActor()->addForce(PxVec3(-1, 0, 0)*gForceStrength);
 			break;
-		case 'L': //right
-			scene->GetSelectedActor()->addForce(PxVec3(1,0,0)*gForceStrength);
-			break;
-		case 'U': //up
-			scene->GetSelectedActor()->addForce(PxVec3(0,1,0)*gForceStrength);
-			break;
-		case 'M': //down
-			scene->GetSelectedActor()->addForce(PxVec3(0,-1,0)*gForceStrength);
+		case 'D':
+			scene->GetSelectedActor()->addForce(PxVec3(1, 0, 0)*gForceStrength);
 			break;
 		default:
 			break;

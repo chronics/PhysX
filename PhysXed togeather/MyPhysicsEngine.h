@@ -245,44 +245,10 @@ namespace PhysicsEngine
 			my_callback = new MySimulationEventCallback();
 			px_scene->setSimulationEventCallback(my_callback);
 
-			plane = new Plane();
-			plane->Color(PxVec3(210.f/255.f,210.f/255.f,210.f/255.f));
-			Add(plane);
-
-			box = new Box(PxTransform(PxVec3(.0f,3.f,.0f)));
-			box->Color(color_palette[2]);
-			////set collision filter flags
-			////box->SetupFiltering(FilterGroup::ACTOR0, FilterGroup::ACTOR1);
-			////use | operator to combine more actors e.g.
-			////box->SetupFiltering(FilterGroup::ACTOR0, FilterGroup::ACTOR1 | FilterGroup::ACTOR2);
-			////don't forget to set your flags for the matching actor as well, e.g.:
-			////box2->SetupFiltering(FilterGroup::ACTOR1, FilterGroup::ACTOR0);
-			box->Name("Box1");
-			Add(box);
-
-			/*wall = new Wall1x1x1(PxTransform(PxVec3(1.f, .0f, .0f)));
-			wall->Color(PxVec3(1.f / 255.f, 1.f / 255.f, 1.f / 255.f));
-			Add(wall);*/
-
-			wall2 = new Wall3x1x1(PxTransform(PxVec3(.0f, .5f, .0f)));
-			wall2->Color(PxVec3(1.f / 255.f, 1.f / 255.f, 1.f / 255.f));
-			Add(wall2);
-
-			StaticCyl = new CylinderStatic(PxTransform(PxVec3(2.f, .5f, .0f)));
-			StaticCyl->Color(color_palette[5]);
-			Add(StaticCyl);
-
-			cyl = new Cylinder(PxTransform(PxVec3(2.0f, 1.5f, .0f)));
-			cyl->Color(color_palette[11]);
-			Add(cyl);
-
-
-			/*
-			//joint two boxes together
-			//the joint is fixed to the centre of the first box, oriented by 90 degrees around the Y axis
-			//and has the second object attached 5 meters away along the Y axis from the first object.
-			RevoluteJoint joint(box, PxTransform(PxVec3(0.f,0.f,0.f),PxQuat(PxPi/2,PxVec3(0.f,1.f,0.f))), box2, PxTransform(PxVec3(0.f,5.f,0.f)));
-			*/
+			CustomLevel1();
+			CustomActors();
+			CustomJoints();
+			
 		}
 
 		//Custom udpate function
@@ -301,5 +267,45 @@ namespace PhysicsEngine
 		{
 			cerr << "I am pressed!" << endl;
 		}
+
+		// create static objects in the world
+		virtual void CustomLevel1()
+		{
+			plane = new Plane();
+			plane->Color(PxVec3(210.f / 255.f, 210.f / 255.f, 210.f / 255.f));
+			Add(plane);
+
+			wall2 = new Wall3x1x1(PxTransform(PxVec3(.0f, .5f, .0f)));
+			wall2->Color(PxVec3(1.f / 255.f, 1.f / 255.f, 1.f / 255.f));
+			Add(wall2);
+
+			StaticCyl = new CylinderStatic(PxTransform(PxVec3(2.f, .5f, .0f)));
+			StaticCyl->Color(color_palette[5]);
+			Add(StaticCyl);
+		}
+
+		virtual void CustomActors()
+		{
+			box = new Box(PxTransform(PxVec3(.0f, 3.f, .0f)));
+			box->Color(color_palette[2]);
+			////set collision filter flags
+			////box->SetupFiltering(FilterGroup::ACTOR0, FilterGroup::ACTOR1);
+			////use | operator to combine more actors e.g.
+			////box->SetupFiltering(FilterGroup::ACTOR0, FilterGroup::ACTOR1 | FilterGroup::ACTOR2);
+			////don't forget to set your flags for the matching actor as well, e.g.:
+			////box2->SetupFiltering(FilterGroup::ACTOR1, FilterGroup::ACTOR0);
+			box->Name("Box1");
+			Add(box);
+
+			cyl = new Cylinder(PxTransform(PxVec3(2.0f, 1.5f, .0f)));
+			cyl->Color(color_palette[11]);
+			Add(cyl);
+		}
+
+		virtual void CustomJoints()
+		{
+			//RevoluteJoint joint(box, PxTransform(PxVec3(0.f, 0.f, 0.f), PxQuat(PxPi / 2, PxVec3(0.f, 1.f, 0.f))), cyl, PxTransform(PxVec3(0.f, 5.f, 0.f)));
+		}
+
 	};
 }
