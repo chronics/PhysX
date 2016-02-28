@@ -244,6 +244,7 @@ namespace VisualDebugger
 			break;
 		case 'A':
 			scene->GetSelectedActor()->addForce(PxVec3(-1, 0, 0)*gForceStrength);
+			//scene->GetSelectedActor()->getShapes(0)->addForce(PxVec3(1, 0, 0)*gForceStrength);
 			break;
 		case 'D':
 			scene->GetSelectedActor()->addForce(PxVec3(1, 0, 0)*gForceStrength);

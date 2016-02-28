@@ -71,7 +71,8 @@ namespace PhysicsEngine
 		{
 			ACTOR0		= (1 << 0),
 			ACTOR1		= (1 << 1),
-			ACTOR2		= (1 << 2)
+			ACTOR2		= (1 << 2),
+			ACTOR3		= (2 << 2)
 			//add more if you need
 		};
 	};
@@ -216,7 +217,7 @@ namespace PhysicsEngine
 		
 		//my objects
 		CylinderStatic* StaticCyl;
-		Cylinder* cyl;
+		Cylinder* cyl, *cyl1;
 
 
 	public:
@@ -266,51 +267,49 @@ namespace PhysicsEngine
 		}
 
 		//static object vars
-			Wall3x1x1* wall1, wall1lvl2;
-			Wall3x2x1* wall2, wall2lvl2;
-			Wall2x1x1* wall3, wall3lvl2;
+			Wall3x1x1* playerStartL, *wall1_1;
+			Wall3x2x1* wall2, *wall2_1;
+			Wall2x1x1* PlayerStartR, *wall3_1, *wall3_2, *wall3_3;
 
 		// create static objects in the world
 		virtual void CustomLevel1()
 		{
 			
-
+			//floor
 			plane = new Plane();
 			plane->Color(PxVec3(210.f / 255.f, 210.f / 255.f, 210.f / 255.f));
 			Add(plane);
 
-			wall1 = new Wall3x1x1(PxTransform(PxVec3(-2.f, .5f, .0f)));
-			wall1->Color(PxVec3(1.f / 255.f, 1.f / 255.f, 1.f / 255.f));
-			Add(wall1);
+			//left start block
+			playerStartL = new Wall3x1x1(PxTransform(PxVec3(-2.f, .5f, .0f)));
+			playerStartL->Color(PxVec3(1.f / 255.f, 1.f / 255.f, 1.f / 255.f));
+			Add(playerStartL);
+			
+			//right start block
+			PlayerStartR = new Wall2x1x1(PxTransform(PxVec3(3.5f, .5f, .0f)));
+			PlayerStartR->Color(PxVec3(1.f / 255.f, 1.f / 255.f, 1.f / 255.f));
+			Add(PlayerStartR);
 
-			wall2 = new Wall3x2x1(PxTransform(PxVec3(1.f, 1.f, .0f)));
-			wall2->Color(PxVec3(1.f / 255.f, 1.f / 255.f, 1.f / 255.f));
-			Add(wall2);
+			//under goal
+			wall3_1 = new Wall2x1x1(PxTransform(PxVec3(1.5f, .5f, .0f)));
+			wall3_1->Color(PxVec3(1.f / 255.f, 1.f / 255.f, 1.f / 255.f));
+			Add(wall3_1);
 
-			wall3 = new Wall2x1x1(PxTransform(PxVec3(3.5f, .5f, .0f)));
-			wall3->Color(PxVec3(1.f / 255.f, 1.f / 255.f, 1.f / 255.f));
-			Add(wall3);
-
-
-			/*StaticCyl = new CylinderStatic(PxTransform(PxVec3(2.f, .5f, .0f)));
-			StaticCyl->Color(color_palette[5]);
-			Add(StaticCyl);*/
+			//left of goal
+			wall3_2 = new Wall2x1x1(PxTransform(PxVec3(.0f, 1.f, .0f)));
+			wall3_2->GetShape(0)->setLocalPose(PxTransform(PxVec3(.0f, .0f, .0f), PxQuat(PxPi / 2, PxVec3(.0f, .0f, 1.f))));	//rotate on the Z axis
+			wall3_2->Color(PxVec3(1.f / 255.f, 1.f / 255.f, 1.f / 255.f));
+			Add(wall3_2);
+			
+			//goal
+			wall3_1 = new Wall2x1x1(PxTransform(PxVec3(1.5f, 1.5f, .0f)));
+			//wall3_1->SetupFiltering(FilterGroup::ACTOR3, FilterGroup::ACTOR1 && FilterGroup::ACTOR2);
+			wall3_1->Color(color_palette[1]);
+			Add(wall3_1);
 		}
 
-		//virtual void CustomLevel2()
-		//{
-		//	plane = new Plane();
-		//	plane->Color(PxVec3(210.f / 255.f, 210.f / 255.f, 210.f / 255.f));
-		//	Add(plane);
-
-		//	wall1lvl2 = new Wall3x1x1(PxTransform(PxVec3(-3.f, .5f, 0.f)));
-		//	wall1lvl2->Colour(1.f / 255.f, 1.f / 255.f, 1.f / 255.f);
-		//	Add(wall1lvl2);
-
-		//	/*StaticCyl = new CylinderStatic(PxTransform(PxVec3(2.f, .5f, .0f)));
-		//	StaticCyl->Color(color_palette[5]);
-		//	Add(StaticCyl);*/
-		//}
+		//dynamic object vars
+		playerbox* player1;
 
 		virtual void CustomActors()
 		{	
@@ -321,26 +320,40 @@ namespace PhysicsEngine
 			////don't forget to set your flags for the matching actor as well, e.g.:
 			////box2->SetupFiltering(FilterGroup::ACTOR1, FilterGroup::ACTOR0);
 
+			/*player1 = new playerbox(PxTransform(PxVec3(.0f, 1.5f, .0f)));											//set the globel pose
+			player1->GetShape(0)->setLocalPose(PxTransform(PxVec3(-3.f, .0f, .0f)));								//set the offset of the 1st object
+			player1->GetShape(1)->setLocalPose(PxTransform(PxVec3(4.f, .0f, .0f)));									//set the offset of the 2nd object
+			player1->GetShape(0)->SetupFiltering(FilterGroup::ACTOR0, FilterGroup::ACTOR1 && FilterGroup::ACTOR3);
+			player1->GetShape(1)->SetupFiltering(FilterGroup::ACTOR1, FilterGroup::ACTOR2 && FilterGroup::ACTOR3);
+			player1->Color(color_palette[2]);																		//set colour to blue
+			player1->Name("Player");																				//set the name of the object
+			Add(player1);*/																							//add the object to the simulation
+
 			box = new Box(PxTransform(PxVec3(-3.f, 3.f, .0f)));
 			box->Color(color_palette[2]);
 			box->Name("player1");
-			box->SetupFiltering(FilterGroup::ACTOR0, FilterGroup::ACTOR1);
+			//box->SetupFiltering(FilterGroup::ACTOR0, FilterGroup::ACTOR1);
 			Add(box);
 
 			box2 = new Box(PxTransform(PxVec3(4.f, 3.f, .0f)));
 			box2->Color(color_palette[3]);
 			box2->Name("palyer1.5");
-			box->SetupFiltering(FilterGroup::ACTOR1, FilterGroup::ACTOR0);
+			//box->SetupFiltering(FilterGroup::ACTOR1, FilterGroup::ACTOR0);
 			Add(box2);
 			
-			/*cyl = new Cylinder(PxTransform(PxVec3(2.0f, 1.5f, .0f)));
+			/*cyl = new Cylinder(PxTransform(PxVec3(2.f, 1.5f, .0f)));
 			cyl->Color(color_palette[11]);
-			Add(cyl);*/
+			Add(cyl);
+
+			cyl1 = new Cylinder(PxTransform(PxVec3(-2.f, 1.5f, .0f)));
+			cyl1->Color(color_palette[10]);
+			Add(cyl1);*/
 		}
 
 		virtual void CustomJoints()
 		{
 			//RevoluteJoint joint(box, PxTransform(PxVec3(0.f, 0.f, 0.f), PxQuat(PxPi / 2, PxVec3(0.f, 1.f, 0.f))), cyl, PxTransform(PxVec3(0.f, 5.f, 0.f)));
+			//DistanceJoint DJoint(cyl1, PxTransform(PxVec3(0.f, 0.f, 0.f), PxQuat(PxPi / 2, PxVec3(0.f, 1.f, 0.f))), cyl, PxTransform(PxVec3(0.f, 5.f, 0.f)));
 		}
 
 	};

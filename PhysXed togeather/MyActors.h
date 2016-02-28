@@ -101,4 +101,15 @@ namespace PhysicsEngine
 		{
 		}
 	};
+
+	class playerbox : public DynamicActor
+	{
+	public:
+		playerbox(const PxTransform& pose = PxTransform(PxIdentity), PxVec3 dimensions = PxVec3(.5f, .5f, .5f), PxReal density = 1.f)
+			: DynamicActor(pose)
+		{
+			CreateShape(PxBoxGeometry(dimensions), density);
+			CreateShape(PxBoxGeometry(dimensions), density);
+		}
+	};
 }
