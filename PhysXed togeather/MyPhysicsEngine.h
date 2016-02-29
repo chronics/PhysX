@@ -307,6 +307,7 @@ namespace PhysicsEngine
 
 		//dynamic object vars
 		playerbox* player1;
+		PxRigidDynamic* px_actor;
 
 		virtual void CustomActors()
 		{	
@@ -318,6 +319,10 @@ namespace PhysicsEngine
 			player1->Color(color_palette[2]);																		//set colour to blue
 			player1->Name("Player");																				//set the name of the object
 			Add(player1);*/																							//add the object to the simulation
+
+			//PxMaterial* default_material = physics->createMaterial(.0f, .2f, .0f);
+
+			//px_actor = (PxRigidDynamic*)box->Get(); //set the box as the actor
 
 			box = new Box(PxTransform(PxVec3(-3.f, 3.f, .0f)));
 			box->Color(color_palette[2]);
