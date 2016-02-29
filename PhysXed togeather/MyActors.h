@@ -6,6 +6,16 @@
 
 namespace PhysicsEngine
 {
+	class Goal : public StaticActor
+	{
+	public:
+		Goal(const PxTransform& pose = PxTransform(PxIdentity), PxVec3 dimensions = PxVec3(1.f, .25f, .49f), PxReal density = 1.f)
+			: StaticActor(pose)
+		{
+			CreateShape(PxBoxGeometry(dimensions), density);
+		}
+	};
+
 	class Wall1x1x1 : public StaticActor
 	{
 	public:

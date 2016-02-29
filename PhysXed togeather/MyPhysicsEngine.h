@@ -114,7 +114,7 @@ namespace PhysicsEngine
 				delete springs[i];
 		}
 	};
-
+	
 	///A customised collision class, implemneting various callbacks
 	class MySimulationEventCallback : public PxSimulationEventCallback
 	{
@@ -136,13 +136,13 @@ namespace PhysicsEngine
 					//check if eNOTIFY_TOUCH_FOUND trigger
 					if (pairs[i].status & PxPairFlag::eNOTIFY_TOUCH_FOUND)
 					{
-						cerr << "onTrigger::eNOTIFY_TOUCH_FOUND" << endl;
+						cerr << "onTrigger::eNOTIFY_TOUCH_FOUND " << endl;
 						trigger = true;
 					}
 					//check if eNOTIFY_TOUCH_LOST trigger
 					if (pairs[i].status & PxPairFlag::eNOTIFY_TOUCH_LOST)
 					{
-						cerr << "onTrigger::eNOTIFY_TOUCH_LOST" << endl;
+						cerr << "onTrigger::eNOTIFY_TOUCH_LOST " << endl;
 						trigger = false;
 					}
 				}
@@ -267,9 +267,10 @@ namespace PhysicsEngine
 		}
 
 		//static object vars
-			Wall3x1x1* playerStartL, *wall1_1;
-			Wall3x2x1* wall2, *wall2_1;
-			Wall2x1x1* PlayerStartR, *wall3_1, *wall3_2, *wall3_3;
+			Wall3x1x1* playerStartL;
+			Wall3x2x1* wall3_2;
+			Wall2x1x1* PlayerStartR, *wall3_1;
+			Goal* goal1;
 
 		// create static objects in the world
 		virtual void CustomLevel1()
@@ -290,22 +291,18 @@ namespace PhysicsEngine
 			PlayerStartR->Color(PxVec3(1.f / 255.f, 1.f / 255.f, 1.f / 255.f));
 			Add(PlayerStartR);
 
-			//under goal
-			wall3_1 = new Wall2x1x1(PxTransform(PxVec3(1.5f, .5f, .0f)));
-			wall3_1->Color(PxVec3(1.f / 255.f, 1.f / 255.f, 1.f / 255.f));
-			Add(wall3_1);
-
 			//left of goal
-			wall3_2 = new Wall2x1x1(PxTransform(PxVec3(.0f, 1.f, .0f)));
-			wall3_2->GetShape(0)->setLocalPose(PxTransform(PxVec3(.0f, .0f, .0f), PxQuat(PxPi / 2, PxVec3(.0f, .0f, 1.f))));	//rotate on the Z axis
+			wall3_2 = new Wall3x2x1(PxTransform(PxVec3(1.f, 1.f, .0f)));
+			wall3_2->GetShape(0)->setLocalPose(PxTransform(PxVec3(.0f, .0f, .0f)/*, PxQuat(PxPi / 2, PxVec3(.0f, .0f, 1.f))*/));	//rotate on the Z axis
 			wall3_2->Color(PxVec3(1.f / 255.f, 1.f / 255.f, 1.f / 255.f));
 			Add(wall3_2);
 			
-			//goal
-			wall3_1 = new Wall2x1x1(PxTransform(PxVec3(1.5f, 1.5f, .0f)));
-			//wall3_1->SetupFiltering(FilterGroup::ACTOR3, FilterGroup::ACTOR1 && FilterGroup::ACTOR2);
-			wall3_1->Color(color_palette[1]);
-			Add(wall3_1);
+			//goal 
+			goal1 = new Goal(PxTransform(PxVec3(1.5f, 2.25f, .0f)));
+			goal1->Color(color_palette[1]);
+			goal1->SetTrigger(my_callback);
+			Add(goal1);	
+
 		}
 
 		//dynamic object vars
@@ -313,13 +310,6 @@ namespace PhysicsEngine
 
 		virtual void CustomActors()
 		{	
-			////set collision filter flags
-			////box->SetupFiltering(FilterGroup::ACTOR0, FilterGroup::ACTOR1);
-			////use | operator to combine more actors e.g.
-			////box->SetupFiltering(FilterGroup::ACTOR0, FilterGroup::ACTOR1 | FilterGroup::ACTOR2);
-			////don't forget to set your flags for the matching actor as well, e.g.:
-			////box2->SetupFiltering(FilterGroup::ACTOR1, FilterGroup::ACTOR0);
-
 			/*player1 = new playerbox(PxTransform(PxVec3(.0f, 1.5f, .0f)));											//set the globel pose
 			player1->GetShape(0)->setLocalPose(PxTransform(PxVec3(-3.f, .0f, .0f)));								//set the offset of the 1st object
 			player1->GetShape(1)->setLocalPose(PxTransform(PxVec3(4.f, .0f, .0f)));									//set the offset of the 2nd object
