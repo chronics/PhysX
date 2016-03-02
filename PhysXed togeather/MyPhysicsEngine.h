@@ -214,11 +214,17 @@ namespace PhysicsEngine
 		Plane* plane;
 		Box* box, * box2;
 		MySimulationEventCallback* my_callback;
-		
-		//my objects
-		CylinderStatic* StaticCyl;
-		Cylinder* cyl, *cyl1;
 
+		Wall1x1x1* playerStartL2, *playerStartR2, *LVL2wall6, *LVL2wall7;
+		Wall3x1x1* playerStartL, *rWall1, *LVL2wall2, *LVL2wall3, *LVL2wall4;
+		Wall3x2x1* wall3_2;
+		Wall2x1x1* PlayerStartR, *wall3_1, *LVL2wall5;
+		Goal* goal1, *goal2;
+
+		playerbox* player1;
+		PxRigidDynamic* px_actor;
+
+		PxRigidBody* a, *b;
 
 	public:
 		//specify your custom filter shader here
@@ -261,17 +267,31 @@ namespace PhysicsEngine
 		}
 
 		/// An example use of key presse handling
-		void ExampleKeyPressHandler()
+		void ExampleKeyPressHandlerD()
 		{
-			cerr << "I am pressed!" << endl;
+			cerr << "I am pressed! : D " << endl;
+
+			a->addForce(PxVec3(300, 0, 0));			
+			b->addForce(PxVec3(-300, 0, 0));
 		}
 
-		//static object vars
-			Wall1x1x1* playerStartL2, *playerStartR2, *LVL2wall6, *LVL2wall7;
-			Wall3x1x1* playerStartL, *rWall1, *LVL2wall2, *LVL2wall3, *LVL2wall4;
-			Wall3x2x1* wall3_2;
-			Wall2x1x1* PlayerStartR, *wall3_1, *LVL2wall5;
-			Goal* goal1, *goal2;
+		/// An example use of key presse handling
+		void ExampleKeyPressHandlerA()
+		{
+			cerr << "I am pressed! : A " << endl;
+
+			a->addForce(PxVec3(-300, 0, 0));
+			b->addForce(PxVec3(300, 0, 0));
+		}
+
+		/// An example use of key presse handling
+		void ExampleKeyPressHandlerW()
+		{
+			cerr << "I am pressed! : W " << endl;
+			
+			a->addForce(PxVec3(0, 850, 0));
+			b->addForce(PxVec3(0, 850, 0));
+		}
 
 		// create static objects in the world
 		virtual void CustomLevel1()
@@ -356,21 +376,8 @@ namespace PhysicsEngine
 			
 		}
 
-		//dynamic object vars
-		playerbox* player1;
-		PxRigidDynamic* px_actor;
-
 		virtual void CustomActors()
 		{	
-			/*player1 = new playerbox(PxTransform(PxVec3(.0f, 1.5f, .0f)));											//set the globel pose
-			player1->GetShape(0)->setLocalPose(PxTransform(PxVec3(-3.f, .0f, .0f)));								//set the offset of the 1st object
-			player1->GetShape(1)->setLocalPose(PxTransform(PxVec3(4.f, .0f, .0f)));									//set the offset of the 2nd object
-			player1->GetShape(0)->SetupFiltering(FilterGroup::ACTOR0, FilterGroup::ACTOR1 && FilterGroup::ACTOR3);
-			player1->GetShape(1)->SetupFiltering(FilterGroup::ACTOR1, FilterGroup::ACTOR2 && FilterGroup::ACTOR3);
-			player1->Color(color_palette[2]);																		//set colour to blue
-			player1->Name("Player");																				//set the name of the object
-			Add(player1);*/																							//add the object to the simulation
-
 			//PxMaterial* default_material = physics->createMaterial(.0f, .2f, .0f);
 
 			//px_actor = (PxRigidDynamic*)box->Get(); //set the box as the actor
@@ -378,22 +385,15 @@ namespace PhysicsEngine
 			box = new Box(PxTransform(PxVec3(-3.f, 3.5f, .0f)));
 			box->Color(color_palette[2]);
 			box->Name("player1");
-			//box->SetupFiltering(FilterGroup::ACTOR0, FilterGroup::ACTOR1);
 			Add(box);
 
 			box2 = new Box(PxTransform(PxVec3(4.f, 3.5f, .0f)));
 			box2->Color(color_palette[3]);
 			box2->Name("palyer1.5");
-			//box->SetupFiltering(FilterGroup::ACTOR1, FilterGroup::ACTOR0);
 			Add(box2);
-			
-			/*cyl = new Cylinder(PxTransform(PxVec3(2.f, 1.5f, .0f)));
-			cyl->Color(color_palette[11]);
-			Add(cyl);
 
-			cyl1 = new Cylinder(PxTransform(PxVec3(-2.f, 1.5f, .0f)));
-			cyl1->Color(color_palette[10]);
-			Add(cyl1);*/
+			a = (PxRigidBody*)box->Get();
+			b = (PxRigidBody*)box2->Get();
 		}
 
 		virtual void CustomJoints()
