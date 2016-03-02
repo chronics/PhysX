@@ -267,10 +267,11 @@ namespace PhysicsEngine
 		}
 
 		//static object vars
-			Wall3x1x1* playerStartL;
+			Wall1x1x1* playerStartL2, *playerStartR2, *LVL2wall6, *LVL2wall7;
+			Wall3x1x1* playerStartL, *rWall1, *LVL2wall2, *LVL2wall3, *LVL2wall4;
 			Wall3x2x1* wall3_2;
-			Wall2x1x1* PlayerStartR, *wall3_1;
-			Goal* goal1;
+			Wall2x1x1* PlayerStartR, *wall3_1, *LVL2wall5;
+			Goal* goal1, *goal2;
 
 		// create static objects in the world
 		virtual void CustomLevel1()
@@ -290,10 +291,10 @@ namespace PhysicsEngine
 			PlayerStartR = new Wall2x1x1(PxTransform(PxVec3(3.5f, .5f, .0f)));
 			PlayerStartR->Color(PxVec3(1.f / 255.f, 1.f / 255.f, 1.f / 255.f));
 			Add(PlayerStartR);
-
+			
 			//left of goal
 			wall3_2 = new Wall3x2x1(PxTransform(PxVec3(1.f, 1.f, .0f)));
-			wall3_2->GetShape(0)->setLocalPose(PxTransform(PxVec3(.0f, .0f, .0f)/*, PxQuat(PxPi / 2, PxVec3(.0f, .0f, 1.f))*/));	//rotate on the Z axis
+			//wall3_2->GetShape(0)->setLocalPose(PxTransform(PxVec3(.0f, .0f, .0f)/*, PxQuat(PxPi / 2, PxVec3(.0f, .0f, 1.f))*/));	//rotate on the Z axis
 			wall3_2->Color(PxVec3(1.f / 255.f, 1.f / 255.f, 1.f / 255.f));
 			Add(wall3_2);
 			
@@ -302,7 +303,57 @@ namespace PhysicsEngine
 			goal1->Color(color_palette[1]);
 			goal1->SetTrigger(my_callback);
 			Add(goal1);	
+	
+		}
 
+		virtual void CustomLevel2()
+		{
+			goal1->GetShape()->release();
+			playerStartL->GetShape()->release();
+			PlayerStartR->GetShape()->release();
+			wall3_2->GetShape()->release();
+
+			playerStartL2 = new Wall1x1x1(PxTransform(PxVec3(-6.0f, 2.5f, .0f)));
+			playerStartL2->Color(PxVec3(1.f / 255.f, 1.f / 255.f, 1.f / 255.f));
+			Add(playerStartL2);
+
+			playerStartR2 = new Wall1x1x1(PxTransform(PxVec3(4.f, 1.5f, .0f)));
+			playerStartR2->Color(PxVec3(1.f / 255.f, 1.f / 255.f, 1.f / 255.f));
+			Add(playerStartR2);
+
+			rWall1 = new Wall3x1x1(PxTransform(PxVec3(2.f, 2.5f, .0f)));
+			rWall1->Color(PxVec3(1.f / 255.f, 1.f / 255.f, 1.f / 255.f));
+			Add(rWall1);
+
+			LVL2wall2 = new Wall3x1x1(PxTransform(PxVec3(-1.f, 2.5f, .0f)));
+			LVL2wall2->Color(PxVec3(1.f / 255.f, 1.f / 255.f, 1.f / 255.f));
+			Add(LVL2wall2);
+
+			LVL2wall3 = new Wall3x1x1(PxTransform(PxVec3(-4.f, 2.5f, .0f)));
+			LVL2wall3->Color(PxVec3(1.f / 255.f, 1.f / 255.f, 1.f / 255.f));
+			Add(LVL2wall3);
+
+			LVL2wall4 = new Wall3x1x1(PxTransform(PxVec3(-2.f, 5.5f, .0f)));
+			LVL2wall4->Color(PxVec3(1.f / 255.f, 1.f / 255.f, 1.f / 255.f));
+			Add(LVL2wall4);
+
+			LVL2wall5 = new Wall2x1x1(PxTransform(PxVec3(.5f, 5.5f, .0f)));
+			LVL2wall5->Color(PxVec3(1.f / 255.f, 1.f / 255.f, 1.f / 255.f));
+			Add(LVL2wall5);
+
+			LVL2wall6 = new Wall1x1x1(PxTransform(PxVec3(4.f, 5.f, .0f)));
+			LVL2wall6->Color(PxVec3(1.f / 255.f, 1.f / 255.f, 1.f / 255.f));
+			Add(LVL2wall6);
+
+			LVL2wall7 = new Wall1x1x1(PxTransform(PxVec3(5.f, 6.f, .0f)));
+			LVL2wall7->Color(PxVec3(1.f / 255.f, 1.f / 255.f, 1.f / 255.f));
+			Add(LVL2wall7);
+
+			goal2 = new Goal(PxTransform(PxVec3(.5f, 3.25f, .0f)));
+			goal2->Color(color_palette[1]);
+			goal2->SetTrigger(my_callback);
+			Add(goal2);
+			
 		}
 
 		//dynamic object vars
@@ -324,13 +375,13 @@ namespace PhysicsEngine
 
 			//px_actor = (PxRigidDynamic*)box->Get(); //set the box as the actor
 
-			box = new Box(PxTransform(PxVec3(-3.f, 3.f, .0f)));
+			box = new Box(PxTransform(PxVec3(-3.f, 3.5f, .0f)));
 			box->Color(color_palette[2]);
 			box->Name("player1");
 			//box->SetupFiltering(FilterGroup::ACTOR0, FilterGroup::ACTOR1);
 			Add(box);
 
-			box2 = new Box(PxTransform(PxVec3(4.f, 3.f, .0f)));
+			box2 = new Box(PxTransform(PxVec3(4.f, 3.5f, .0f)));
 			box2->Color(color_palette[3]);
 			box2->Name("palyer1.5");
 			//box->SetupFiltering(FilterGroup::ACTOR1, FilterGroup::ACTOR0);
