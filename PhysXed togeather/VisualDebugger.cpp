@@ -39,7 +39,7 @@ namespace VisualDebugger
 	///simulation objects
 	Camera* camera;
 	PhysicsEngine::MyScene* scene;
-	PxReal delta_time = 1.f/150.f;
+	PxReal delta_time = 1.f/60.f;
 	PxReal gForceStrength = 20;
 	RenderMode render_mode = NORMAL;
 	const int MAX_KEYS = 256;
@@ -176,7 +176,7 @@ namespace VisualDebugger
 		{
 		//implement your own
 		case 'D':
-			scene->ExampleKeyPressHandlerD();
+			
 			break;
 		case 'W':
 			scene->ExampleKeyPressHandlerW();
@@ -242,19 +242,17 @@ namespace VisualDebugger
 
 		switch (toupper(key))
 		{
-		//case 'W':
-		//	scene->GetSelectedActor()->addForce(PxVec3(0, 1, 0)*gForceStrength);
-		//	break;
-		//case 'S':
-		//	scene->GetSelectedActor()->addForce(PxVec3(0, -1, 0)*gForceStrength);
-		//	break;
-		//case 'A':
-		//	scene->GetSelectedActor()->addForce(PxVec3(-1, 0, 0)*gForceStrength);
-		//	//scene->GetSelectedActor()->getShapes(0)->addForce(PxVec3(1, 0, 0)*gForceStrength);
-		//	break;
-		//case 'D':
-		//	scene->GetSelectedActor()->addForce(PxVec3(1, 0, 0)*gForceStrength);
-		//	break;
+		case 'W':
+			scene->ExampleKeyPressHandlerW();
+			break;
+		case 'S':
+			break;
+		case 'A':
+			scene->ExampleKeyPressHandlerA();
+			break;
+		case 'D':
+			scene->ExampleKeyPressHandlerD();
+			break;
 		default:
 			break;
 		}

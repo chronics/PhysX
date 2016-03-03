@@ -211,6 +211,9 @@ namespace PhysicsEngine
 	///Custom scene class
 	class MyScene : public Scene
 	{
+
+		PxReal gForceStrength = 20;
+
 		Plane* plane;
 		Box* box, * box2;
 		MySimulationEventCallback* my_callback;
@@ -249,7 +252,7 @@ namespace PhysicsEngine
 			my_callback = new MySimulationEventCallback();
 			px_scene->setSimulationEventCallback(my_callback);
 
-			CustomLevel1();
+			CustomLevel2();
 			CustomActors();
 			CustomJoints();
 			
@@ -271,8 +274,8 @@ namespace PhysicsEngine
 		{
 			cerr << "I am pressed! : D " << endl;
 
-			a->addForce(PxVec3(300, 0, 0));			
-			b->addForce(PxVec3(-300, 0, 0));
+			a->addForce(PxVec3(1, 0, 0)*gForceStrength);			
+			b->addForce(PxVec3(-1, 0, 0)*gForceStrength);
 		}
 
 		/// An example use of key presse handling
@@ -280,8 +283,8 @@ namespace PhysicsEngine
 		{
 			cerr << "I am pressed! : A " << endl;
 
-			a->addForce(PxVec3(-300, 0, 0));
-			b->addForce(PxVec3(300, 0, 0));
+			a->addForce(PxVec3(-1, 0, 0)*gForceStrength);
+			b->addForce(PxVec3(1, 0, 0)*gForceStrength);
 		}
 
 		/// An example use of key presse handling
@@ -289,8 +292,8 @@ namespace PhysicsEngine
 		{
 			cerr << "I am pressed! : W " << endl;
 			
-			a->addForce(PxVec3(0, 850, 0));
-			b->addForce(PxVec3(0, 850, 0));
+			a->addForce(PxVec3(0, 1, 0)*gForceStrength);
+			b->addForce(PxVec3(0, 1, 0)*gForceStrength);
 		}
 
 		// create static objects in the world
@@ -328,10 +331,10 @@ namespace PhysicsEngine
 
 		virtual void CustomLevel2()
 		{
-			goal1->GetShape()->release();
+			/*goal1->GetShape()->release();
 			playerStartL->GetShape()->release();
 			PlayerStartR->GetShape()->release();
-			wall3_2->GetShape()->release();
+			wall3_2->GetShape()->release();*/
 
 			playerStartL2 = new Wall1x1x1(PxTransform(PxVec3(-6.0f, 2.5f, .0f)));
 			playerStartL2->Color(PxVec3(1.f / 255.f, 1.f / 255.f, 1.f / 255.f));
