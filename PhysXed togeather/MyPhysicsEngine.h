@@ -229,10 +229,13 @@ namespace PhysicsEngine
 
 		PxRigidBody* a, *b;
 
+		PxMaterial* Floor;
+
 	public:
 		//specify your custom filter shader here
 		//PxDefaultSimulationFilterShader by default
 		MyScene() : Scene() {};
+
 
 		///A custom scene class
 		void SetVisualisation()
@@ -247,6 +250,8 @@ namespace PhysicsEngine
 			SetVisualisation();			
 
 			GetMaterial()->setDynamicFriction(.2f);
+
+			Floor = CreateMaterial(0.f, 2.f, 10.f);
 
 			///Initialise and set the customised event callback
 			my_callback = new MySimulationEventCallback();
@@ -338,6 +343,7 @@ namespace PhysicsEngine
 
 			playerStartL2 = new Wall1x1x1(PxTransform(PxVec3(-6.0f, 2.5f, .0f)));
 			playerStartL2->Color(PxVec3(1.f / 255.f, 1.f / 255.f, 1.f / 255.f));
+			playerStartL2->Material(Floor);
 			Add(playerStartL2);
 
 			playerStartR2 = new Wall1x1x1(PxTransform(PxVec3(4.f, 1.5f, .0f)));
