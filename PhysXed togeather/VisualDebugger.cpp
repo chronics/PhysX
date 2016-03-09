@@ -243,7 +243,7 @@ namespace VisualDebugger
 		switch (toupper(key))
 		{
 		case 'W':
-			scene->ExampleKeyPressHandlerW();
+			
 			break;
 		case 'S':
 			break;

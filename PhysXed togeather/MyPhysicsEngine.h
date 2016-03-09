@@ -251,13 +251,18 @@ namespace PhysicsEngine
 
 			GetMaterial()->setDynamicFriction(.2f);
 
-			Floor = CreateMaterial(0.f, 2.f, 10.f);
+			Floor = CreateMaterial(0.f, 2.f, 2.f);
 
 			///Initialise and set the customised event callback
 			my_callback = new MySimulationEventCallback();
 			px_scene->setSimulationEventCallback(my_callback);
 
-			CustomLevel2();
+			//floor
+			plane = new Plane();
+			plane->Color(PxVec3(210.f / 255.f, 210.f / 255.f, 210.f / 255.f));
+			Add(plane);
+
+			CustomLevel1();
 			CustomActors();
 			CustomJoints();
 			
@@ -266,6 +271,9 @@ namespace PhysicsEngine
 		//Custom udpate function
 		virtual void CustomUpdate() 
 		{
+			if (my_callback->trigger) {		//when callback var trigger is true do this
+				a->release();
+			}
 		}
 
 		/// An example use of key release handling
@@ -278,18 +286,19 @@ namespace PhysicsEngine
 		void ExampleKeyPressHandlerD()
 		{
 			cerr << "I am pressed! : D " << endl;
-
-			a->addForce(PxVec3(1, 0, 0)*gForceStrength);			
-			b->addForce(PxVec3(-1, 0, 0)*gForceStrength);
-		}
+			
+				a->addForce(PxVec3(1, 0, 0)*gForceStrength); //add force in direction *20
+				b->addForce(PxVec3(-1, 0, 0)*gForceStrength);
+			}
 
 		/// An example use of key presse handling
 		void ExampleKeyPressHandlerA()
 		{
 			cerr << "I am pressed! : A " << endl;
 
-			a->addForce(PxVec3(-1, 0, 0)*gForceStrength);
-			b->addForce(PxVec3(1, 0, 0)*gForceStrength);
+			
+				a->addForce(PxVec3(-1, 0, 0)*gForceStrength);
+				b->addForce(PxVec3(1, 0, 0)*gForceStrength);
 		}
 
 		/// An example use of key presse handling
@@ -297,19 +306,14 @@ namespace PhysicsEngine
 		{
 			cerr << "I am pressed! : W " << endl;
 			
-			a->addForce(PxVec3(0, 1, 0)*gForceStrength);
-			b->addForce(PxVec3(0, 1, 0)*gForceStrength);
+			
+				a->addForce(PxVec3(0, 260, 0));
+				b->addForce(PxVec3(0, 260, 0));
 		}
 
 		// create static objects in the world
 		virtual void CustomLevel1()
 		{
-			
-			//floor
-			plane = new Plane();
-			plane->Color(PxVec3(210.f / 255.f, 210.f / 255.f, 210.f / 255.f));
-			Add(plane);
-
 			//left start block
 			playerStartL = new Wall3x1x1(PxTransform(PxVec3(-2.f, .5f, .0f)));
 			playerStartL->Color(PxVec3(1.f / 255.f, 1.f / 255.f, 1.f / 255.f));
@@ -330,16 +334,15 @@ namespace PhysicsEngine
 			goal1 = new Goal(PxTransform(PxVec3(1.5f, 2.25f, .0f)));
 			goal1->Color(color_palette[1]);
 			goal1->SetTrigger(my_callback);
-			Add(goal1);	
-	
+			Add(goal1);		
 		}
 
 		virtual void CustomLevel2()
 		{
-			/*goal1->GetShape()->release();
+			goal1->GetShape()->release();
 			playerStartL->GetShape()->release();
 			PlayerStartR->GetShape()->release();
-			wall3_2->GetShape()->release();*/
+			wall3_2->GetShape()->release();
 
 			playerStartL2 = new Wall1x1x1(PxTransform(PxVec3(-6.0f, 2.5f, .0f)));
 			playerStartL2->Color(PxVec3(1.f / 255.f, 1.f / 255.f, 1.f / 255.f));
@@ -404,6 +407,7 @@ namespace PhysicsEngine
 			a = (PxRigidBody*)box->Get();
 			b = (PxRigidBody*)box2->Get();
 		}
+
 
 		virtual void CustomJoints()
 		{
