@@ -22,7 +22,7 @@ namespace PhysicsEngine
 
 		PxVec3(46.f / 255.f,9.f / 255.f,39.f / 255.f),		//pink			6
 		PxVec3(217.f / 255.f,0.f / 255.f,0.f / 255.f),		//salmon pink	7
-		PxVec3(139.f / 255.f,69.f / 255.f,19.f / 255.f),	//brown			8
+		PxVec3(255.f / 255.f,45.f / 255.f,0.f / 255.f),		//red			8
 		PxVec3(255.f / 255.f,140.f / 255.f,54.f / 255.f),	//cream			9
 		PxVec3(4.f / 255.f,117.f / 255.f,111.f / 255.f),	//turquoise		10
 		PxVec3(147.f / 255.f,112.f / 255.f,219.f / 255.f)	//mediumpurple	11	
@@ -121,7 +121,6 @@ namespace PhysicsEngine
 	public:
 		//an example variable that will be checked in the main simulation loop
 		bool trigger;
-		int collisions = 0;
 
 		MySimulationEventCallback() : trigger(false) {}
 
@@ -139,14 +138,12 @@ namespace PhysicsEngine
 					{
 						cerr << "onTrigger::eNOTIFY_TOUCH_FOUND " << endl;
 						trigger = true;
-						collisions++;
 					}
 					//check if eNOTIFY_TOUCH_LOST trigger
 					if (pairs[i].status & PxPairFlag::eNOTIFY_TOUCH_LOST)
 					{
 						cerr << "onTrigger::eNOTIFY_TOUCH_LOST " << endl;
 						trigger = false;
-						collisions--;
 					}
 				}
 			}
@@ -215,7 +212,25 @@ namespace PhysicsEngine
 	class MyScene : public Scene
 	{
 
-		
+		PxReal gForceStrength = 20;
+
+		Plane* plane;
+		Box* box, * box2;
+		MySimulationEventCallback* my_callback;
+
+		Wall1x1x1* playerStartL2, *playerStartR2, *LVL2wall6, *LVL2wall7;
+		Wall3x1x1* playerStartL, *rWall1, *LVL2wall2, *LVL2wall3, *LVL2wall4;
+		Wall3x2x1* wall3_2;
+		Wall2x1x1* PlayerStartR, *wall3_1, *LVL2wall5;
+		Goal* goal1, *goal2;
+
+		playerbox* player1;
+		PxRigidDynamic* px_actor;
+
+		PxRigidBody* a, *b;
+
+		PxMaterial* Floor;
+
 	public:
 		//specify your custom filter shader here
 		//PxDefaultSimulationFilterShader by default
@@ -228,21 +243,6 @@ namespace PhysicsEngine
 			px_scene->setVisualizationParameter(PxVisualizationParameter::eSCALE, 1.0f);
 			px_scene->setVisualizationParameter(PxVisualizationParameter::eCOLLISION_SHAPES, 1.0f);
 		}
-
-		PxReal gForceStrength = 20;
-
-		Plane* plane;
-		Box* box, * box2;
-		MySimulationEventCallback* my_callback;
-
-		Wall1x1x1* smallWall_1; 
-		Wall2x1x1* midWall_1;
-		Wall3x1x1* longWall_1, *LVL1_LongWall_1, *LVL1_LongWall_2;
-		Wall3x2x1* bigWall_1;
-		Goal* goal1;
-
-		PxRigidBody* a, *b;
-		PxMaterial* Floor;
 
 		//Custom scene initialisation
 		virtual void CustomInit() 
@@ -264,55 +264,15 @@ namespace PhysicsEngine
 
 			CustomLevel1();
 			CustomActors();
-			CustomJoints();			
-		}
-
-		virtual void CustomLevel1()
-		{
-			LVL1_LongWall_1 = new Wall3x1x1(PxTransform(PxVec3(-2.f, .5f, .0f)));
-			LVL1_LongWall_1->Color(color_palette[8]);
-			Add(LVL1_LongWall_1);
-
-			LVL1_LongWall_2 = new Wall3x1x1(PxTransform(PxVec3(1.f, .5f, .0f)));
-			LVL1_LongWall_2->Color(color_palette[8]);
-			Add(LVL1_LongWall_2);
-
-			goal1 = new Goal(PxTransform(PxVec3(-.5f, 1.f, .0f)));
-			goal1->Color(color_palette[1]);
-			goal1->SetTrigger(my_callback);
-			Add(goal1);
-
-		}
-
-		virtual void CustomActors()
-		{
-			box = new Box(PxTransform(PxVec3(-3.f, 3.5f, .0f)));
-			box->Color(color_palette[2]);
-			box->Name("player1");
-			Add(box);
-
-			box2 = new Box(PxTransform(PxVec3(2.f, 3.5f, .0f)));
-			box2->Color(color_palette[3]);
-			box2->Name("palyer1.5");
-			Add(box2);
-
-			a = (PxRigidBody*)box->Get();
-			b = (PxRigidBody*)box2->Get();
-		}
-
-
-		virtual void CustomJoints()
-		{
-			//RevoluteJoint joint(box, PxTransform(PxVec3(0.f, 0.f, 0.f), PxQuat(PxPi / 2, PxVec3(0.f, 1.f, 0.f))), cyl, PxTransform(PxVec3(0.f, 5.f, 0.f)));
-			//DistanceJoint DJoint(cyl1, PxTransform(PxVec3(0.f, 0.f, 0.f), PxQuat(PxPi / 2, PxVec3(0.f, 1.f, 0.f))), cyl, PxTransform(PxVec3(0.f, 5.f, 0.f)));
+			CustomJoints();
+			
 		}
 
 		//Custom udpate function
 		virtual void CustomUpdate() 
 		{
-			if (my_callback->collisions >= 2)
-			{
-				cerr << "two collisions there for level complete " << endl;
+			if (my_callback->trigger) {		//when callback var trigger is true do this
+				playerStartL->GetShape()->release();
 			}
 		}
 
@@ -349,6 +309,111 @@ namespace PhysicsEngine
 			
 				a->addForce(PxVec3(0, 260, 0));
 				b->addForce(PxVec3(0, 260, 0));
-		}	
+		}
+
+		// create static objects in the world
+		virtual void CustomLevel1()
+		{
+			//left start block
+			playerStartL = new Wall3x1x1(PxTransform(PxVec3(-2.f, .5f, .0f)));
+			playerStartL->Color(PxVec3(1.f / 255.f, 1.f / 255.f, 1.f / 255.f));
+			Add(playerStartL);
+			
+			//right start block
+			PlayerStartR = new Wall2x1x1(PxTransform(PxVec3(3.5f, .5f, .0f)));
+			PlayerStartR->Color(PxVec3(1.f / 255.f, 1.f / 255.f, 1.f / 255.f));
+			Add(PlayerStartR);
+			
+			//left of goal
+			wall3_2 = new Wall3x2x1(PxTransform(PxVec3(1.f, 1.f, .0f)));
+			//wall3_2->GetShape(0)->setLocalPose(PxTransform(PxVec3(.0f, .0f, .0f)/*, PxQuat(PxPi / 2, PxVec3(.0f, .0f, 1.f))*/));	//rotate on the Z axis
+			wall3_2->Color(PxVec3(1.f / 255.f, 1.f / 255.f, 1.f / 255.f));
+			Add(wall3_2);
+			
+			//goal 
+			goal1 = new Goal(PxTransform(PxVec3(1.5f, 2.25f, .0f)));
+			goal1->Color(color_palette[1]);
+			goal1->SetTrigger(my_callback);
+			Add(goal1);		
+		}
+
+		virtual void CustomLevel2()
+		{
+			goal1->GetShape()->release();
+			playerStartL->GetShape()->release();
+			PlayerStartR->GetShape()->release();
+			wall3_2->GetShape()->release();
+
+			playerStartL2 = new Wall1x1x1(PxTransform(PxVec3(-6.0f, 2.5f, .0f)));
+			playerStartL2->Color(PxVec3(1.f / 255.f, 1.f / 255.f, 1.f / 255.f));
+			playerStartL2->Material(Floor);
+			Add(playerStartL2);
+
+			playerStartR2 = new Wall1x1x1(PxTransform(PxVec3(4.f, 1.5f, .0f)));
+			playerStartR2->Color(PxVec3(1.f / 255.f, 1.f / 255.f, 1.f / 255.f));
+			Add(playerStartR2);
+
+			rWall1 = new Wall3x1x1(PxTransform(PxVec3(2.f, 2.5f, .0f)));
+			rWall1->Color(PxVec3(1.f / 255.f, 1.f / 255.f, 1.f / 255.f));
+			Add(rWall1);
+
+			LVL2wall2 = new Wall3x1x1(PxTransform(PxVec3(-1.f, 2.5f, .0f)));
+			LVL2wall2->Color(PxVec3(1.f / 255.f, 1.f / 255.f, 1.f / 255.f));
+			Add(LVL2wall2);
+
+			LVL2wall3 = new Wall3x1x1(PxTransform(PxVec3(-4.f, 2.5f, .0f)));
+			LVL2wall3->Color(PxVec3(1.f / 255.f, 1.f / 255.f, 1.f / 255.f));
+			Add(LVL2wall3);
+
+			LVL2wall4 = new Wall3x1x1(PxTransform(PxVec3(-2.f, 5.5f, .0f)));
+			LVL2wall4->Color(PxVec3(1.f / 255.f, 1.f / 255.f, 1.f / 255.f));
+			Add(LVL2wall4);
+
+			LVL2wall5 = new Wall2x1x1(PxTransform(PxVec3(.5f, 5.5f, .0f)));
+			LVL2wall5->Color(PxVec3(1.f / 255.f, 1.f / 255.f, 1.f / 255.f));
+			Add(LVL2wall5);
+
+			LVL2wall6 = new Wall1x1x1(PxTransform(PxVec3(4.f, 5.f, .0f)));
+			LVL2wall6->Color(PxVec3(1.f / 255.f, 1.f / 255.f, 1.f / 255.f));
+			Add(LVL2wall6);
+
+			LVL2wall7 = new Wall1x1x1(PxTransform(PxVec3(5.f, 6.f, .0f)));
+			LVL2wall7->Color(PxVec3(1.f / 255.f, 1.f / 255.f, 1.f / 255.f));
+			Add(LVL2wall7);
+
+			goal2 = new Goal(PxTransform(PxVec3(.5f, 3.25f, .0f)));
+			goal2->Color(color_palette[1]);
+			goal2->SetTrigger(my_callback);
+			Add(goal2);
+			
+		}
+
+		virtual void CustomActors()
+		{	
+			//PxMaterial* default_material = physics->createMaterial(.0f, .2f, .0f);
+
+			//px_actor = (PxRigidDynamic*)box->Get(); //set the box as the actor
+
+			box = new Box(PxTransform(PxVec3(-3.f, 3.5f, .0f)));
+			box->Color(color_palette[2]);
+			box->Name("player1");
+			Add(box);
+
+			box2 = new Box(PxTransform(PxVec3(4.f, 3.5f, .0f)));
+			box2->Color(color_palette[3]);
+			box2->Name("palyer1.5");
+			Add(box2);
+
+			a = (PxRigidBody*)box->Get();
+			b = (PxRigidBody*)box2->Get();
+		}
+
+
+		virtual void CustomJoints()
+		{
+			//RevoluteJoint joint(box, PxTransform(PxVec3(0.f, 0.f, 0.f), PxQuat(PxPi / 2, PxVec3(0.f, 1.f, 0.f))), cyl, PxTransform(PxVec3(0.f, 5.f, 0.f)));
+			//DistanceJoint DJoint(cyl1, PxTransform(PxVec3(0.f, 0.f, 0.f), PxQuat(PxPi / 2, PxVec3(0.f, 1.f, 0.f))), cyl, PxTransform(PxVec3(0.f, 5.f, 0.f)));
+		}
+
 	};
 }
