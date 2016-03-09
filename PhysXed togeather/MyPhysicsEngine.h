@@ -25,7 +25,10 @@ namespace PhysicsEngine
 		PxVec3(139.f / 255.f,69.f / 255.f,19.f / 255.f),	//brown			8
 		PxVec3(255.f / 255.f,140.f / 255.f,54.f / 255.f),	//cream			9
 		PxVec3(4.f / 255.f,117.f / 255.f,111.f / 255.f),	//turquoise		10
-		PxVec3(147.f / 255.f,112.f / 255.f,219.f / 255.f)	//mediumpurple	11	
+		PxVec3(147.f / 255.f,112.f / 255.f,219.f / 255.f),	//mediumpurple	11	
+
+		PxVec3(.0f / 255.f,102.f / 255.f,0.f / 255.f),		//Dark Green	12	
+		PxVec3(.0f / 255.f,102.f / 255.f,204.f / 255.f)		//skyish blue	13	
 	};
 
 	//pyramid vertices
@@ -235,10 +238,12 @@ namespace PhysicsEngine
 		Box* box, * box2;
 		MySimulationEventCallback* my_callback;
 
+		backWall* _backWall;
+
 		Wall1x1x1* smallWall_1; 
-		Wall2x1x1* midWall_1;
-		Wall3x1x1* longWall_1, *LVL1_LongWall_1, *LVL1_LongWall_2;
-		Wall3x2x1* bigWall_1;
+		Wall2x1x1* midWall_1, *LVL2_midWall_1;
+		Wall3x1x1* longWall_1, *LVL1_LongWall_1, *LVL1_LongWall_2, *LVL2_LongWall_1;
+		Wall3x2x1* bigWall_1, *LVL2_bigWall_1;
 		Goal* goal1;
 
 		PxRigidBody* a, *b;
@@ -259,8 +264,12 @@ namespace PhysicsEngine
 
 			//floor
 			plane = new Plane();
-			plane->Color(PxVec3(210.f / 255.f, 210.f / 255.f, 210.f / 255.f));
+			plane->Color(color_palette[12]);
 			Add(plane);
+
+			_backWall = new backWall(PxTransform(PxVec3(.0f, .0f, -1.1f)));
+			_backWall->Color(color_palette[13]);
+			Add(_backWall);
 
 			CustomLevel1();
 			CustomActors();
@@ -269,7 +278,8 @@ namespace PhysicsEngine
 
 		virtual void CustomLevel1()
 		{
-			LVL1_LongWall_1 = new Wall3x1x1(PxTransform(PxVec3(-2.f, .5f, .0f)));
+			//level 1 objects
+			LVL1_LongWall_1 = new Wall3x1x1(PxTransform(PxVec3(-2.f, .5f, .0f))); 
 			LVL1_LongWall_1->Color(color_palette[8]);
 			Add(LVL1_LongWall_1);
 
@@ -281,6 +291,21 @@ namespace PhysicsEngine
 			goal1->Color(color_palette[1]);
 			goal1->SetTrigger(my_callback);
 			Add(goal1);
+
+
+			LVL2_LongWall_1 = new Wall3x1x1(PxTransform(PxVec3(-2.f, 20.5f, .0f)));
+			LVL2_LongWall_1->Color(color_palette[8]);
+			Add(LVL2_LongWall_1);
+
+			//right start block
+			LVL2_midWall_1 = new Wall2x1x1(PxTransform(PxVec3(3.5f, 20.5f, .0f)));
+			LVL2_midWall_1->Color(color_palette[8]);
+			Add(LVL2_midWall_1);
+
+			//left of goal
+			LVL2_bigWall_1 = new Wall3x2x1(PxTransform(PxVec3(1.f, 21.f, .0f)));
+			LVL2_bigWall_1->Color(color_palette[8]);
+			Add(LVL2_bigWall_1);
 
 		}
 
@@ -313,6 +338,17 @@ namespace PhysicsEngine
 			if (my_callback->collisions >= 2)
 			{
 				cerr << "two collisions there for level complete " << endl;
+				a->setGlobalPose(PxTransform(PxVec3(-3.f, 3.5f, .0f)));
+				b->setGlobalPose(PxTransform(PxVec3(4.f, 3.5f, .0f)));
+
+				LVL1_LongWall_1->GetShape()->setLocalPose(PxTransform(PxVec3(.0f, -4.0f, .0f)));
+				LVL1_LongWall_2->GetShape()->setLocalPose(PxTransform(PxVec3(.0f, -4.0f, .0f)));
+				LVL2_LongWall_1->GetShape()->setLocalPose(PxTransform(PxVec3(.0f, -20.0f, .0f)));
+				LVL2_midWall_1->GetShape()->setLocalPose(PxTransform(PxVec3(.0f, -20.0f, .0f)));
+				LVL2_bigWall_1->GetShape()->setLocalPose(PxTransform(PxVec3(.0f, -20.0f, .0f)));
+
+				goal1->GetShape()->setLocalPose(PxTransform(PxVec3(2.f, 1.25f, .0f)));
+			
 			}
 		}
 

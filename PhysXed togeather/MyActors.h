@@ -122,4 +122,15 @@ namespace PhysicsEngine
 			CreateShape(PxBoxGeometry(dimensions), density);
 		}
 	};
+
+	class backWall : public StaticActor
+	{
+	public:
+		backWall(const PxTransform& pose = PxTransform(PxIdentity), PxVec3 dimensions = PxVec3(20.f, 20.f, .5f), PxReal density = 1.f)
+			: StaticActor(pose)
+		{
+			CreateShape(PxBoxGeometry(dimensions), density);
+			
+		}
+	};
 }
