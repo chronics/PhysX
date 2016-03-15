@@ -124,7 +124,7 @@ namespace PhysicsEngine
 	public:
 		//an example variable that will be checked in the main simulation loop
 		bool trigger;
-		int collisions = 0;
+		int collisions = 0; //create a new int for later use
 
 		MySimulationEventCallback() : trigger(false) {}
 
@@ -142,14 +142,14 @@ namespace PhysicsEngine
 					{
 						cerr << "onTrigger::eNOTIFY_TOUCH_FOUND " << endl;
 						trigger = true;
-						collisions++;
+						collisions++; //incriment this int when a collision is detected 
 					}
 					//check if eNOTIFY_TOUCH_LOST trigger
 					if (pairs[i].status & PxPairFlag::eNOTIFY_TOUCH_LOST)
 					{
 						cerr << "onTrigger::eNOTIFY_TOUCH_LOST " << endl;
 						trigger = false;
-						collisions--;
+						collisions--; // reset when collision is lost
 					}
 				}
 			}
@@ -313,7 +313,7 @@ namespace PhysicsEngine
 		{
 			box = new Box(PxTransform(PxVec3(-3.f, 3.5f, .0f)));
 			box->Color(color_palette[2]);
-			box->Name("player1");
+			box->Get()->setName("player1");
 			Add(box);
 
 			box2 = new Box(PxTransform(PxVec3(2.f, 3.5f, .0f)));
@@ -335,19 +335,20 @@ namespace PhysicsEngine
 		//Custom udpate function
 		virtual void CustomUpdate() 
 		{
-			if (my_callback->collisions >= 2)
+			if (my_callback->collisions >= 2) //find out if this variable within this class is 2 if so...
 			{
 				cerr << "two collisions there for level complete " << endl;
-				a->setGlobalPose(PxTransform(PxVec3(-3.f, 3.5f, .0f)));
-				b->setGlobalPose(PxTransform(PxVec3(4.f, 3.5f, .0f)));
+				a->setGlobalPose(PxTransform(PxVec3(-3.f, 3.5f, .0f)));	//move actor a
+				b->setGlobalPose(PxTransform(PxVec3(4.f, 3.5f, .0f)));	//move actor b
 
+				//move walls to change the levels
 				LVL1_LongWall_1->GetShape()->setLocalPose(PxTransform(PxVec3(.0f, -4.0f, .0f)));
 				LVL1_LongWall_2->GetShape()->setLocalPose(PxTransform(PxVec3(.0f, -4.0f, .0f)));
 				LVL2_LongWall_1->GetShape()->setLocalPose(PxTransform(PxVec3(.0f, -20.0f, .0f)));
 				LVL2_midWall_1->GetShape()->setLocalPose(PxTransform(PxVec3(.0f, -20.0f, .0f)));
 				LVL2_bigWall_1->GetShape()->setLocalPose(PxTransform(PxVec3(.0f, -20.0f, .0f)));
 
-				goal1->GetShape()->setLocalPose(PxTransform(PxVec3(2.f, 1.25f, .0f)));
+				goal1->GetShape()->setLocalPose(PxTransform(PxVec3(2.f, 1.25f, .0f)));	// move the goal to teh new location
 			
 			}
 		}
