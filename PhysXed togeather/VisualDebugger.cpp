@@ -93,9 +93,9 @@ namespace VisualDebugger
 		hud.AddLine(EMPTY, "");
 		//add a help screen
 		hud.AddLine(HELP, " Simulation");
+		hud.AddLine(HELP, "    F4 - reset");
 		hud.AddLine(HELP, "    F9 - select next actor");
 		hud.AddLine(HELP, "    F10 - pause");
-		hud.AddLine(HELP, "    F12 - reset");
 		hud.AddLine(HELP, "");
 		hud.AddLine(HELP, " Display");
 		hud.AddLine(HELP, "    F5 - help on/off");
@@ -103,8 +103,7 @@ namespace VisualDebugger
 		hud.AddLine(HELP, "    F7 - render mode");
 		hud.AddLine(HELP, "");
 		hud.AddLine(HELP, " Player Force (applied to the selected actors)");
-		hud.AddLine(HELP, "    W,S,A,D, - up,down,left,right");
-		hud.AddLine(HELP, "    mouse + click - change orientation");
+		hud.AddLine(HELP, "    W,S,A, - up,left,right");
 		hud.AddLine(HELP, "    F8 - reset view");
 		hud.AddLine(HELP, "");
 		//hud.AddLine(HELP, " camera");
@@ -266,6 +265,10 @@ namespace VisualDebugger
 		switch (key)
 		{
 			//display control
+		case GLUT_KEY_F4:
+			//resect scene
+			scene->Reset();
+			break;
 		case GLUT_KEY_F5:
 			//hud on/off
 			hud_show = !hud_show;
@@ -292,10 +295,7 @@ namespace VisualDebugger
 			//toggle scene pause
 			scene->Pause(!scene->Pause());
 			break;
-		case GLUT_KEY_F12:
-			//resect scene
-			scene->Reset();
-			break;
+		
 		default:
 			break;
 		}

@@ -155,6 +155,10 @@ namespace PhysicsEngine
 			joint = PxD6JointCreate(*GetPhysics(), px_actor0, localFrame0, (PxRigidActor*)actor1->Get(), localFrame1);
 			joint->setConstraintFlag(PxConstraintFlag::eVISUALIZATION, true);
 		}
-
 	};*/
+
+	
+		
+
+	
 }
