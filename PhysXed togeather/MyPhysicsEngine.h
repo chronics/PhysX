@@ -125,6 +125,7 @@ namespace PhysicsEngine
 		//an example variable that will be checked in the main simulation loop
 		bool trigger;
 		int collisions = 0; //create a new int for later use
+		int level = 1;
 
 		MySimulationEventCallback() : trigger(false) {}
 
@@ -240,14 +241,16 @@ namespace PhysicsEngine
 
 		backWall* _backWall;
 
-		Wall1x1x1* smallWall_1; 
-		Wall2x1x1* midWall_1, *LVL2_midWall_1;
+		Wall1x1x1* smallWall_1, *LVL3_smallWall1, *LVL3_smallWall2, *LVL3_smallWall3, *LVL3_smallWall4;
+		Wall2x1x1* midWall_1, *LVL2_midWall_1, *LVL3_midWall2;
 		Wall3x1x1* longWall_1, *LVL1_LongWall_1, *LVL1_LongWall_2, *LVL2_LongWall_1;
 		Wall3x2x1* bigWall_1, *LVL2_bigWall_1;
 		Goal* goal1;
 
 		PxRigidBody* a, *b;
 		PxMaterial* Floor;
+
+		CylinderStatic* cyl1, *cyl2;
 
 		//Custom scene initialisation
 		virtual void CustomInit() 
@@ -278,6 +281,7 @@ namespace PhysicsEngine
 
 		virtual void CustomLevel1()
 		{
+
 			//level 1 objects
 			LVL1_LongWall_1 = new Wall3x1x1(PxTransform(PxVec3(-2.f, .5f, .0f))); 
 			LVL1_LongWall_1->Color(color_palette[8]);
@@ -307,6 +311,26 @@ namespace PhysicsEngine
 			LVL2_bigWall_1->Color(color_palette[8]);
 			Add(LVL2_bigWall_1);
 
+			////level 3
+			//LVL3_smallWall1 = new Wall1x1x1(PxTransform(PxVec3(-3.0f, 20.f, .0f)));
+			//LVL3_smallWall1->Color(color_palette[8]);
+			//Add(LVL3_smallWall1);
+
+			//LVL3_smallWall2 = new Wall1x1x1(PxTransform(PxVec3(-2.0f, 20.f, .0f)));
+			//LVL3_smallWall2->Color(color_palette[8]);
+			//Add(LVL3_smallWall2);
+
+			//LVL3_smallWall3 == new Wall1x1x1(PxTransform(PxVec3(2.0f, 20.f, .0f)));
+			//LVL3_smallWall3->Color(color_palette[8]);
+			//Add(LVL3_smallWall3);
+
+			//LVL3_smallWall4 == new Wall1x1x1(PxTransform(PxVec3(3.0f, 20.f, .0f)));
+			//LVL3_smallWall4->Color(color_palette[8]);
+			//Add(LVL3_smallWall4);
+
+			//LVL3_midWall2 == new Wall2x1x1(PxTransform(PxVec3(.0f, 20.f, .0f)));
+			//LVL3_midWall2->Color(color_palette[8]);
+			//Add(LVL3_midWall2);
 		}
 
 		virtual void CustomActors()
@@ -325,17 +349,27 @@ namespace PhysicsEngine
 			b = (PxRigidBody*)box2->Get();
 		}
 
-
+		//D6Joint* d6joint;
 		virtual void CustomJoints()
 		{
-			//RevoluteJoint joint(box, PxTransform(PxVec3(0.f, 0.f, 0.f), PxQuat(PxPi / 2, PxVec3(0.f, 1.f, 0.f))), cyl, PxTransform(PxVec3(0.f, 5.f, 0.f)));
-			//DistanceJoint DJoint(cyl1, PxTransform(PxVec3(0.f, 0.f, 0.f), PxQuat(PxPi / 2, PxVec3(0.f, 1.f, 0.f))), cyl, PxTransform(PxVec3(0.f, 5.f, 0.f)));
+			/*cyl1 = new CylinderStatic(PxTransform(PxVec3(.0f, .5f, .0f))); Add(cyl1);
+			cyl2 = new CylinderStatic(PxTransform(PxVec3(.0f, 1.f, .0f))); Add(cyl2);*/
+
+			//RevoluteJoint joint1(cyl1, PxTransform(PxVec3(0.f, 5.f, 0.f), PxQuat(PxPi / 2, PxVec3(0.f, 1.f, 0.f))), cyl2, PxTransform(PxVec3(0.f, 1.5f, 0.f)));
+			//DistanceJoint DJoint(cyl1, PxTransform(PxVec3(0.f, 0.f, 0.f), PxQuat(PxPi / 2, PxVec3(0.f, 1.f, 0.f))), cyl2, PxTransform(PxVec3(0.f, 5.f, 0.f)));
+			/*d6joint= new D6Joint(cyl1, PxTransform(PxVec3(0.f, 5.f, 0.f), PxQuat(PxPi / 2, PxVec3(0.f, 1.f, 0.f))), cyl2, PxTransform(PxVec3(0.f, 1.5f, 0.f)));
+			d6joint->setMotion(PxD6Axis::eX, PxD6Motion::eFREE);*/
 		}
 
 		//Custom udpate function
 		virtual void CustomUpdate() 
 		{
-			if (my_callback->collisions >= 2) //find out if this variable within this class is 2 if so...
+			
+			if (my_callback->level == 1 && my_callback->collisions >= 2) 
+			{
+				my_callback->level++;
+			}
+			else if (my_callback->level == 2 && my_callback->collisions >= 2) //find out if this variable within this class is 2 if so...
 			{
 				cerr << "two collisions there for level complete " << endl;
 				a->setGlobalPose(PxTransform(PxVec3(-3.f, 3.5f, .0f)));	//move actor a
@@ -349,14 +383,28 @@ namespace PhysicsEngine
 				LVL2_bigWall_1->GetShape()->setLocalPose(PxTransform(PxVec3(.0f, -20.0f, .0f)));
 
 				goal1->GetShape()->setLocalPose(PxTransform(PxVec3(2.f, 1.25f, .0f)));	// move the goal to teh new location
-			
 			}
+			//else if (my_callback->level == 3 && my_callback->collisions >= 2) //load level 3
+			//{
+			//	LVL2_LongWall_1->GetShape()->setLocalPose(PxTransform(PxVec3(.0f, -30.0f, .0f)));
+			//	LVL2_midWall_1->GetShape()->setLocalPose(PxTransform(PxVec3(.0f, -30.0f, .0f)));
+			//	LVL2_bigWall_1->GetShape()->setLocalPose(PxTransform(PxVec3(.0f, -30.0f, .0f)));
+			//	
+			//	LVL3_smallWall1->GetShape()->setLocalPose(PxTransform(PxVec3(.0f, -17.0f, .0f)));
+			//	LVL3_smallWall2->GetShape()->setLocalPose(PxTransform(PxVec3(.0f, -14.0f, .0f)));
+			//	LVL3_smallWall3->GetShape()->setLocalPose(PxTransform(PxVec3(.0f, -14.0f, .0f)));
+			//	LVL3_smallWall4->GetShape()->setLocalPose(PxTransform(PxVec3(.0f, -17.0f, .0f)));
+			//	LVL3_midWall2->GetShape()->setLocalPose(PxTransform(PxVec3(.0f, -18.f, .0f)));
+
+			//	goal1->GetShape()->setLocalPose(PxTransform(PxVec3(0.f, 18.25f, .0f)));
+			//}
+
 		}
 
 		/// An example use of key release handling
 		void ExampleKeyReleaseHandler()
 		{
-			cerr << "I am realeased!" << endl;
+			//cerr << "I am realeased!" << endl;
 		}
 
 		/// An example use of key presse handling

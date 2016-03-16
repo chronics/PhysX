@@ -130,7 +130,31 @@ namespace PhysicsEngine
 			: StaticActor(pose)
 		{
 			CreateShape(PxBoxGeometry(dimensions), density);
-			
 		}
 	};
+
+	class rotationalBlock : public StaticActor
+	{
+	public:
+		rotationalBlock(const PxTransform& pose = PxTransform(PxIdentity), PxVec3 dimensions = PxVec3(.5f, .5f, .5f), PxReal density = 1.f)
+			: StaticActor(pose)
+		{
+			CreateShape(PxBoxGeometry(dimensions), density);
+		}
+	};
+
+	/*class D6Joint : public Joint
+	{
+	public:
+		D6Joint(Actor* actor0, const PxTransform& localFrame0, Actor* actor1, const PxTransform& localFrame1)
+		{
+			PxRigidActor* px_actor0 = 0;
+			if (actor0)
+				px_actor0 = (PxRigidActor*)actor0->Get();
+
+			joint = PxD6JointCreate(*GetPhysics(), px_actor0, localFrame0, (PxRigidActor*)actor1->Get(), localFrame1);
+			joint->setConstraintFlag(PxConstraintFlag::eVISUALIZATION, true);
+		}
+
+	};*/
 }
